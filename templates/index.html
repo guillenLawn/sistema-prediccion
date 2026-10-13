@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de predicción de deserción estudiantil basado en Inteligencia Artificial para la Universidad Nacional Tecnológica de Lima Sur (UNTELS).">
+    <title>UNTELS — Predicción de Deserción Estudiantil</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- ===== PARTÍCULAS DE FONDO ===== -->
+    <div class="particles" id="particles" aria-hidden="true"></div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header__container">
+            <div class="header__brand">
+                <div class="header__logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+                        <circle cx="20" cy="20" r="18" stroke="url(#grad1)" stroke-width="2.5" fill="none"/>
+                        <path d="M14 26V14l6 8 6-8v12" stroke="url(#grad1)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#60a5fa"/>
+                                <stop offset="100%" stop-color="#a78bfa"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="header__title">Predicción de Deserción Estudiantil</h1>
+                    <p class="header__subtitle">Sistema de Alerta Temprana — UNTELS</p>
+                </div>
+            </div>
+            <div class="header__badge">
+                <span class="header__badge-dot"></span>
+                <span>IA Activa</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main">
+
+        <!-- Formulario de Evaluación -->
+        <section class="card card--form" id="seccion-formulario">
+            <div class="card__header">
+                <div class="card__icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="card__title">Evaluación del Estudiante</h2>
+                    <p class="card__desc">Ingrese los datos académicos para obtener el diagnóstico predictivo.</p>
+                </div>
+            </div>
+
+            <form id="formulario-prediccion" novalidate>
+
+                <!-- Datos opcionales del alumno -->
+                <fieldset class="fieldset">
+                    <legend class="fieldset__legend">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Identificación del Alumno
+                        <span class="fieldset__optional">(Opcional)</span>
+                    </legend>
+                    <div class="form-grid form-grid--2col">
+                        <div class="form-group">
+                            <label for="nombre_alumno" class="form-label">Nombre Completo</label>
+                            <input type="text" id="nombre_alumno" name="nombre_alumno"
+                                   class="form-input" placeholder="Ej: Juan Pérez García"
+                                   autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="codigo_alumno" class="form-label">Código de Alumno</label>
+                            <input type="text" id="codigo_alumno" name="codigo_alumno"
+                                   class="form-input" placeholder="Ej: 2023001"
+                                   autocomplete="off">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Rendimiento Académico -->
+                <fieldset class="fieldset">
+                    <legend class="fieldset__legend">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        Rendimiento Académico
+                    </legend>
+                    <div class="form-grid form-grid--2col">
+                        <div class="form-group">
+                            <label for="cu_1sem_approved" class="form-label">
+                                Unidades Curriculares Aprobadas — 1er Semestre
+                            </label>
+                            <input type="number" id="cu_1sem_approved" name="cu_1sem_approved"
+                                   class="form-input" required
+                                   min="0" max="30" step="1" placeholder="0 – 30">
+                            <span class="form-hint">Cantidad de materias aprobadas</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cu_2sem_approved" class="form-label">
+                                Unidades Curriculares Aprobadas — 2do Semestre
+                            </label>
+                            <input type="number" id="cu_2sem_approved" name="cu_2sem_approved"
+                                   class="form-input" required
+                                   min="0" max="30" step="1" placeholder="0 – 30">
+                            <span class="form-hint">Cantidad de materias aprobadas</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cu_1sem_grade" class="form-label">
+                                Nota Promedio — 1er Semestre
+                            </label>
+                            <input type="number" id="cu_1sem_grade" name="cu_1sem_grade"
+                                   class="form-input" required
+                                   min="0" max="20" step="0.01" placeholder="0.00 – 20.00">
+                            <span class="form-hint">Promedio ponderado del semestre</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cu_2sem_grade" class="form-label">
+                                Nota Promedio — 2do Semestre
+                            </label>
+                            <input type="number" id="cu_2sem_grade" name="cu_2sem_grade"
+                                   class="form-input" required
+                                   min="0" max="20" step="0.01" placeholder="0.00 – 20.00">
+                            <span class="form-hint">Promedio ponderado del semestre</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Información de Admisión -->
+                <fieldset class="fieldset">
+                    <legend class="fieldset__legend">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        Información de Admisión
+                    </legend>
+                    <div class="form-grid form-grid--2col">
+                        <div class="form-group">
+                            <label for="admission_grade" class="form-label">
+                                Nota de Admisión
+                            </label>
+                            <input type="number" id="admission_grade" name="admission_grade"
+                                   class="form-input" required
+                                   min="0" max="200" step="0.01" placeholder="0.00 – 200.00">
+                            <span class="form-hint">Puntaje obtenido en el examen de admisión</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="previous_qualification_grade" class="form-label">
+                                Nota de Calificación Previa
+                            </label>
+                            <input type="number" id="previous_qualification_grade" name="previous_qualification_grade"
+                                   class="form-input" required
+                                   min="0" max="200" step="0.01" placeholder="0.00 – 200.00">
+                            <span class="form-hint">Nota de la educación secundaria u otra calificación</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Situación Financiera -->
+                <fieldset class="fieldset">
+                    <legend class="fieldset__legend">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Situación Financiera
+                    </legend>
+                    <div class="form-grid form-grid--1col">
+                        <div class="form-group">
+                            <label for="tuition_fees_up_to_date" class="form-label">
+                                ¿Matrícula al día?
+                            </label>
+                            <div class="select-wrapper">
+                                <select id="tuition_fees_up_to_date" name="tuition_fees_up_to_date"
+                                        class="form-input form-select" required>
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    <option value="1">Sí — Pagos al día</option>
+                                    <option value="0">No — Pagos pendientes</option>
+                                </select>
+                                <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </div>
+                            <span class="form-hint">Estado actual de los pagos de matrícula</span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Botón de envío -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary" id="btn-evaluar">
+                        <span class="btn__text">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            Evaluar Riesgo de Deserción
+                        </span>
+                        <span class="btn__loader" aria-hidden="true">
+                            <span class="spinner"></span>
+                            Analizando...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Tarjeta de Resultado -->
+        <section class="card card--result hidden" id="seccion-resultado">
+            <div class="result" id="resultado-contenido">
+
+                <!-- Ícono dinámico -->
+                <div class="result__icon" id="resultado-icono"></div>
+
+                <!-- Etiqueta principal -->
+                <h2 class="result__title" id="resultado-titulo"></h2>
+                <p class="result__subtitle" id="resultado-subtitulo"></p>
+
+                <!-- Barras de probabilidad -->
+                <div class="result__bars">
+                    <div class="bar-group">
+                        <div class="bar-group__header">
+                            <span class="bar-group__label">Probabilidad de Deserción</span>
+                            <span class="bar-group__value bar-group__value--danger" id="prob-desercion-texto">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill bar-fill--danger" id="prob-desercion-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-group__header">
+                            <span class="bar-group__label">Probabilidad de Graduación</span>
+                            <span class="bar-group__value bar-group__value--success" id="prob-graduacion-texto">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill bar-fill--success" id="prob-graduacion-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalles adicionales -->
+                <div class="result__details" id="resultado-detalles"></div>
+
+                <!-- Botón nueva evaluación -->
+                <button type="button" class="btn btn--secondary" id="btn-nueva-evaluacion">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                    </svg>
+                    Nueva Evaluación
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <p>© 2026 Universidad Nacional Tecnológica de Lima Sur (UNTELS)</p>
+        <p class="footer__tech">Modelo AdaBoost · Python · Flask · Machine Learning</p>
+    </footer>
+
+    <!-- ===== TOAST DE ERRORES ===== -->
+    <div class="toast hidden" id="toast-error" role="alert" aria-live="assertive">
+        <div class="toast__content">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            <span id="toast-mensaje">Error desconocido</span>
+        </div>
+        <button class="toast__close" id="toast-cerrar" aria-label="Cerrar notificación">&times;</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
