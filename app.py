@@ -1,5 +1,5 @@
 """
-app.py — Servidor Flask para el Sistema de Predicción de Deserción Estudiantil UNTELS.
+app.py — Servidor Flask para el Sistema de Predicción de Deserción Estudiantil.
 
 Carga los artefactos de Machine Learning (AdaBoost) al arrancar y expone
 un endpoint REST para realizar predicciones en tiempo real.
@@ -29,7 +29,7 @@ MODELOS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'modelos'
 
 try:
     modelo = joblib.load(os.path.join(MODELOS_DIR, 'modelo_campeon.joblib'))
-    escalador = joblib.load(os.path.join(MODELOS_DIR, 'escalador_untels.joblib'))
+    escalador = joblib.load(os.path.join(MODELOS_DIR, 'escalador.joblib'))
     columnas = joblib.load(os.path.join(MODELOS_DIR, 'columnas_requeridas.joblib'))
     print(f"✅ Modelos cargados correctamente. Columnas esperadas: {columnas}")
 except FileNotFoundError as e:
@@ -119,6 +119,9 @@ def predecir():
                 'status': 'error',
                 'mensaje': f'El campo "{campo}" debe ser un valor numérico. Recibido: {datos[campo]}'
             }), 400
+
+    # -- Adaptador de escala: nota previa de vigesimal (0-20) a escala interna (0-200) --
+    valores['previous_qualification_grade'] = valores['previous_qualification_grade'] * 10.0
 
     # -- Construir DataFrame en el orden exacto del modelo --
     try:

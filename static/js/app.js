@@ -1,5 +1,5 @@
 /**
- * app.js — Lógica del frontend para el Sistema de Predicción de Deserción UNTELS.
+ * app.js — Lógica del frontend para el Sistema de Predicción de Deserción Estudiantil.
  */
 
 // Detectar URL base del API (local vs producción)
