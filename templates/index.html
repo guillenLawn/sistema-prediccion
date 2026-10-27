@@ -53,11 +53,6 @@
         <!-- Formulario de Evaluación -->
         <section class="card card--form" id="seccion-formulario">
             <div class="card__header">
-                <div class="card__icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-                    </svg>
-                </div>
                 <div>
                     <h2 class="card__title">Evaluación del Estudiante</h2>
                     <p class="card__desc">Ingrese los datos académicos para obtener el diagnóstico predictivo.</p>
@@ -65,6 +60,24 @@
             </div>
 
             <form id="formulario-prediccion" novalidate>
+
+                <!-- Cargar alumno de ejemplo -->
+                <div class="examples" id="seccion-ejemplos">
+                    <div class="examples__info">
+                        <span class="examples__title">Cargar Alumno de Ejemplo</span>
+                        <span class="examples__desc">Autocompleta el formulario para probar el sistema rápidamente.</span>
+                    </div>
+                    <div class="examples__actions">
+                        <button type="button" class="btn-example btn-example--ok" id="btn-ejemplo-favorable">
+                            <span class="btn-example__dot" aria-hidden="true"></span>
+                            Alumno Favorable
+                        </button>
+                        <button type="button" class="btn-example btn-example--risk" id="btn-ejemplo-riesgo">
+                            <span class="btn-example__dot" aria-hidden="true"></span>
+                            Alumno en Riesgo
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Datos opcionales del alumno -->
                 <fieldset class="fieldset">
@@ -101,22 +114,40 @@
                     </legend>
                     <div class="form-grid form-grid--2col">
                         <div class="form-group">
-                            <label for="cu_1sem_approved" class="form-label">
+                            <label id="label-cu_1sem_approved" class="form-label">
                                 Cursos Aprobados — 1.er Ciclo
                             </label>
-                            <input type="number" id="cu_1sem_approved" name="cu_1sem_approved"
-                                   class="form-input" required
-                                   min="0" max="8" step="1" placeholder="0 – 8">
-                            <span class="form-hint">Cantidad de cursos aprobados en el ciclo (0 a 8)</span>
+                            <input type="hidden" id="cu_1sem_approved" name="cu_1sem_approved">
+                            <div class="chip-group" role="radiogroup" aria-labelledby="label-cu_1sem_approved" data-target="cu_1sem_approved">
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="0">0</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="1">1</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="2">2</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="3">3</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="4">4</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="5">5</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="6">6</button>
+                                <button type="button" class="chip chip--over" role="radio" aria-checked="false" data-value="7" title="Sobrecarga: ampliación de créditos">7</button>
+                                <button type="button" class="chip chip--over" role="radio" aria-checked="false" data-value="8" title="Carga máxima permitida (sobrecrédito)">8</button>
+                            </div>
+                            <span class="form-hint">Cursos aprobados en el ciclo. <span class="hint-gold">7 y 8 = con sobrecrédito</span></span>
                         </div>
                         <div class="form-group">
-                            <label for="cu_2sem_approved" class="form-label">
+                            <label id="label-cu_2sem_approved" class="form-label">
                                 Cursos Aprobados — 2.do Ciclo
                             </label>
-                            <input type="number" id="cu_2sem_approved" name="cu_2sem_approved"
-                                   class="form-input" required
-                                   min="0" max="8" step="1" placeholder="0 – 8">
-                            <span class="form-hint">Cantidad de cursos aprobados en el ciclo (0 a 8)</span>
+                            <input type="hidden" id="cu_2sem_approved" name="cu_2sem_approved">
+                            <div class="chip-group" role="radiogroup" aria-labelledby="label-cu_2sem_approved" data-target="cu_2sem_approved">
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="0">0</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="1">1</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="2">2</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="3">3</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="4">4</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="5">5</button>
+                                <button type="button" class="chip" role="radio" aria-checked="false" data-value="6">6</button>
+                                <button type="button" class="chip chip--over" role="radio" aria-checked="false" data-value="7" title="Sobrecarga: ampliación de créditos">7</button>
+                                <button type="button" class="chip chip--over" role="radio" aria-checked="false" data-value="8" title="Carga máxima permitida (sobrecrédito)">8</button>
+                            </div>
+                            <span class="form-hint">Cursos aprobados en el ciclo. <span class="hint-gold">7 y 8 = con sobrecrédito</span></span>
                         </div>
                         <div class="form-group">
                             <label for="cu_1sem_grade" class="form-label">
@@ -139,15 +170,15 @@
                     </div>
                 </fieldset>
 
-                <!-- Información de Admisión -->
+                <!-- Antecedentes de Ingreso -->
                 <fieldset class="fieldset">
                     <legend class="fieldset__legend">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
                         </svg>
-                        Información de Admisión
+                        Antecedentes de Ingreso
                     </legend>
-                    <div class="form-grid form-grid--2col">
+                    <div class="form-grid form-grid--3col">
                         <div class="form-group">
                             <label for="admission_grade" class="form-label">
                                 Nota de Admisión
@@ -155,7 +186,7 @@
                             <input type="number" id="admission_grade" name="admission_grade"
                                    class="form-input" required
                                    min="0" max="200" step="0.01" placeholder="0.00 – 200.00">
-                            <span class="form-hint">Puntaje obtenido en el examen de admisión</span>
+                            <span class="form-hint">Puntaje del examen de admisión</span>
                         </div>
                         <div class="form-group">
                             <label for="previous_qualification_grade" class="form-label">
@@ -164,20 +195,8 @@
                             <input type="number" id="previous_qualification_grade" name="previous_qualification_grade"
                                    class="form-input" required
                                    min="0" max="20" step="0.01" placeholder="0.00 – 20.00">
-                            <span class="form-hint">Nota de la educación secundaria en escala vigesimal</span>
+                            <span class="form-hint">Nota de secundaria en escala vigesimal</span>
                         </div>
-                    </div>
-                </fieldset>
-
-                <!-- Datos Personales de Ingreso -->
-                <fieldset class="fieldset">
-                    <legend class="fieldset__legend">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        Datos de Ingreso
-                    </legend>
-                    <div class="form-grid form-grid--1col">
                         <div class="form-group">
                             <label for="age_at_enrollment" class="form-label">
                                 Edad de Ingreso
@@ -185,7 +204,7 @@
                             <input type="number" id="age_at_enrollment" name="age_at_enrollment"
                                    class="form-input" required
                                    min="16" max="80" step="1" placeholder="Ej: 19">
-                            <span class="form-hint">Edad del estudiante al ingresar a la carrera</span>
+                            <span class="form-hint">Edad al ingresar a la carrera</span>
                         </div>
                     </div>
                 </fieldset>
@@ -204,6 +223,12 @@
                             Analizando...
                         </span>
                     </button>
+                    <button type="button" class="btn-clear" id="btn-limpiar">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                        </svg>
+                        Limpiar formulario
+                    </button>
                 </div>
             </form>
         </section>
@@ -211,9 +236,6 @@
         <!-- Tarjeta de Resultado -->
         <section class="card card--result hidden" id="seccion-resultado">
             <div class="result" id="resultado-contenido">
-
-                <!-- Ícono dinámico -->
-                <div class="result__icon" id="resultado-icono"></div>
 
                 <!-- Etiqueta principal -->
                 <h2 class="result__title" id="resultado-titulo"></h2>
@@ -239,6 +261,13 @@
                             <div class="bar-fill bar-fill--success" id="prob-graduacion-bar" style="width: 0%"></div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Factores críticos del diagnóstico -->
+                <div class="factors hidden" id="resultado-factores">
+                    <h3 class="factors__title" id="factores-titulo"></h3>
+                    <ul class="factors__list" id="factores-lista"></ul>
+                    <p class="factors__note">Explicación orientativa basada en reglas académicas sobre los datos ingresados.</p>
                 </div>
 
                 <!-- Detalles adicionales -->

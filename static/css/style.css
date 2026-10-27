@@ -201,21 +201,20 @@ body {
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-sm) var(--space-md);
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.2);
-    border-radius: var(--radius-full);
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
     font-size: var(--font-size-xs);
-    color: var(--color-success-light);
+    color: var(--color-text-secondary);
     font-weight: 500;
     white-space: nowrap;
 }
 
 .header__badge-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--color-success);
+    width: 7px;
+    height: 7px;
+    background: var(--color-text-muted);
     border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -258,18 +257,6 @@ body {
     margin-bottom: var(--space-xl);
     padding-bottom: var(--space-lg);
     border-bottom: 1px solid var(--color-border);
-}
-
-.card__icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-    border-radius: var(--radius-md);
-    color: white;
 }
 
 .card__title {
@@ -527,13 +514,11 @@ body {
 }
 
 .card--result.result--danger {
-    border-color: rgba(239, 68, 68, 0.3);
-    box-shadow: var(--shadow-lg), 0 0 40px rgba(239, 68, 68, 0.1);
+    border-color: rgba(184, 107, 105, 0.35);
 }
 
 .card--result.result--success {
-    border-color: rgba(34, 197, 94, 0.3);
-    box-shadow: var(--shadow-lg), 0 0 40px rgba(34, 197, 94, 0.1);
+    border-color: rgba(106, 163, 132, 0.35);
 }
 
 @keyframes slideUp {
@@ -555,52 +540,18 @@ body {
     gap: var(--space-base);
 }
 
-.result__icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    animation: iconPop 0.5s var(--transition-bounce) 0.2s both;
-}
-
-@keyframes iconPop {
-    from {
-        opacity: 0;
-        transform: scale(0);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.result__icon--danger {
-    background: rgba(239, 68, 68, 0.15);
-    border: 2px solid rgba(239, 68, 68, 0.3);
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
-}
-
-.result__icon--success {
-    background: rgba(34, 197, 94, 0.15);
-    border: 2px solid rgba(34, 197, 94, 0.3);
-    box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
-}
-
 .result__title {
     font-size: var(--font-size-2xl);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.2;
 }
 
 .result__title--danger {
-    color: var(--color-danger-light);
+    color: #d98c8a;
 }
 
 .result__title--success {
-    color: var(--color-success-light);
+    color: #86b89b;
 }
 
 .result__subtitle {
@@ -643,11 +594,11 @@ body {
 }
 
 .bar-group__value--danger {
-    color: var(--color-danger-light);
+    color: #d98c8a;
 }
 
 .bar-group__value--success {
-    color: var(--color-success-light);
+    color: #86b89b;
 }
 
 .bar-track {
@@ -661,18 +612,16 @@ body {
 .bar-fill {
     height: 100%;
     border-radius: var(--radius-full);
-    transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: width 0.8s ease;
     position: relative;
 }
 
 .bar-fill--danger {
-    background: linear-gradient(90deg, var(--color-danger), var(--color-warning));
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+    background: #b86b69;
 }
 
 .bar-fill--success {
-    background: linear-gradient(90deg, var(--color-success), #34d399);
-    box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+    background: #6aa384;
 }
 
 /* ---- Result Details ---- */
@@ -871,4 +820,278 @@ body {
 ::selection {
     background: var(--color-primary);
     color: white;
+}
+
+
+/* ================================================================
+   Mejoras de formulario: chips, ejemplos, 3 columnas, limpiar,
+   factores críticos
+   ================================================================ */
+
+/* ---- Grid de 3 columnas (Antecedentes de Ingreso) ---- */
+.form-grid--3col {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Alinea los inputs aunque una etiqueta ocupe 2 líneas */
+.form-grid--3col .form-label {
+    min-height: 2.8em;
+}
+
+/* ---- Chips de cursos aprobados (0 a 8) ---- */
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    position: relative;
+    overflow: hidden;
+    flex: 1 1 0;
+    min-width: 34px;
+    height: 42px;
+    padding: 0;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background var(--transition-fast),
+                color var(--transition-fast), box-shadow var(--transition-fast),
+                transform var(--transition-fast);
+}
+
+.chip:hover {
+    border-color: rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--color-text);
+    transform: translateY(-1px);
+}
+
+.chip:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.chip.is-selected {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    border-color: var(--color-primary-light);
+    color: #fff;
+    box-shadow: 0 0 14px var(--color-primary-glow);
+}
+
+/* 7 y 8: con sobrecrédito (ámbar) */
+.chip--over {
+    border-color: rgba(245, 158, 11, 0.35);
+    color: var(--color-warning-light);
+}
+
+.chip--over:hover {
+    border-color: rgba(245, 158, 11, 0.65);
+    color: var(--color-warning-light);
+}
+
+.chip--over.is-selected {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-color: #fbbf24;
+    color: #2b1700;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.4);
+}
+
+.chip-group.input-error {
+    animation: shake 0.4s ease;
+}
+
+.chip-group.input-error .chip:not(.is-selected) {
+    border-color: var(--color-danger);
+}
+
+.hint-gold {
+    color: var(--color-warning-light);
+    font-weight: 500;
+}
+
+/* ---- Cargar alumno de ejemplo ---- */
+.examples {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-base);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-base) var(--space-lg);
+    background: rgba(148, 163, 184, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+.examples__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.examples__title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.examples__desc {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.examples__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.btn-example {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-base);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast),
+                color var(--transition-fast);
+}
+
+.btn-example:hover {
+    color: var(--color-text);
+    border-color: rgba(148, 163, 184, 0.4);
+    background: rgba(148, 163, 184, 0.08);
+}
+
+.btn-example:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.btn-example__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.btn-example--ok .btn-example__dot {
+    background: #6aa384;
+}
+
+.btn-example--risk .btn-example__dot {
+    background: #b86b69;
+}
+
+/* ---- Botón limpiar formulario ---- */
+.btn-clear {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: var(--space-base) auto 0;
+    padding: var(--space-sm) var(--space-md);
+    background: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.btn-clear:hover {
+    color: var(--color-text);
+    background: rgba(148, 163, 184, 0.08);
+}
+
+.btn-clear:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+/* ---- Factores críticos del diagnóstico ---- */
+.factors {
+    width: 100%;
+    max-width: 500px;
+    margin-top: var(--space-base);
+    padding: var(--space-base) var(--space-lg);
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    text-align: left;
+}
+
+.factors__title {
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.factors__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    list-style: none;
+}
+
+.factors__item {
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(148, 163, 184, 0.06);
+    border-left: 3px solid var(--color-text-muted);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+.factors__item--alerta {
+    border-left-color: #b86b69;
+}
+
+.factors__item--info {
+    border-left-color: var(--color-text-muted);
+}
+
+.factors__item--favorable {
+    border-left-color: #6aa384;
+}
+
+.factors__note {
+    margin-top: var(--space-md);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    opacity: 0.8;
+}
+
+/* ---- Responsive de las mejoras ---- */
+@media (max-width: 768px) {
+    .form-grid--3col {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid--3col .form-label {
+        min-height: 0;
+    }
+
+    .examples {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

@@ -59,6 +59,119 @@ CAMPOS_OBLIGATORIOS = list(MAPA_CAMPOS.keys())
 ETIQUETAS = {0: 'Graduado', 1: 'Desertor'}
 
 # ---------------------------------------------------------------------------
+# Explicabilidad: factores críticos / a favor del diagnóstico
+# ---------------------------------------------------------------------------
+def _plural(n, singular, plural):
+    """Retorna 'n singular' o 'n plural' según corresponda."""
+    n = int(n)
+    return f"{n} {singular if n == 1 else plural}"
+
+
+def generar_factores(v, prediccion):
+    """
+    Genera una explicación orientativa del diagnóstico a partir de reglas
+    académicas simples sobre los datos ingresados (no usa los coeficientes
+    del modelo, que pueden ser poco intuitivos por la colinealidad entre
+    cursos aprobados y promedios).
+
+    Parámetros:
+        v (dict): valores numéricos del formulario (claves snake_case).
+        prediccion (int): 1 = Desertor, 0 = Graduado.
+
+    Retorna:
+        dict: {'titulo': str, 'items': [{'nivel': str, 'etiqueta': str, 'texto': str}, ...]}
+              nivel ∈ {'alerta', 'info', 'favorable'}
+    """
+    cu1 = v['cu_1sem_approved']
+    cu2 = v['cu_2sem_approved']
+    g1 = v['cu_1sem_grade']
+    g2 = v['cu_2sem_grade']
+    adm = v['admission_grade']
+    edad = v['age_at_enrollment']
+
+    # Cada riesgo: (severidad 1-3, texto). A mayor severidad, antes aparece.
+    riesgos = []
+    if cu2 == 0:
+        riesgos.append((3, "0 cursos aprobados en el 2.do ciclo."))
+    elif cu2 <= 2:
+        riesgos.append((3, f"Solo {_plural(cu2, 'curso aprobado', 'cursos aprobados')} en el 2.do ciclo."))
+    elif cu2 <= 3:
+        riesgos.append((2, f"Pocos cursos aprobados en el 2.do ciclo ({int(cu2)})."))
+
+    if cu1 == 0:
+        riesgos.append((3, "0 cursos aprobados en el 1.er ciclo."))
+    elif cu1 <= 2:
+        riesgos.append((2, f"Solo {_plural(cu1, 'curso aprobado', 'cursos aprobados')} en el 1.er ciclo."))
+
+    if cu1 - cu2 >= 3 and cu2 > 0:
+        riesgos.append((2, f"Caída de cursos aprobados entre ciclos (de {int(cu1)} a {int(cu2)})."))
+
+    if g1 > 0 and g2 > 0 and (g1 - g2) >= 2:
+        riesgos.append((2, f"Descenso notable del promedio entre el 1.er y 2.do ciclo ({g1:.2f} → {g2:.2f})."))
+    elif 0 < g2 < 11:
+        riesgos.append((2, f"Promedio del 2.do ciclo bajo ({g2:.2f})."))
+
+    if adm < 110:
+        riesgos.append((1, f"Nota de admisión baja ({adm:.0f}/200)."))
+
+    if edad >= 25:
+        riesgos.append((1, f"Edad de ingreso elevada ({int(edad)} años): suele asociarse a mayor carga laboral o familiar."))
+
+    # Factores a favor
+    favores = []
+    if cu2 >= 6:
+        favores.append((3, f"{int(cu2)} cursos aprobados en el 2.do ciclo."))
+    elif cu2 >= 5:
+        favores.append((2, f"{int(cu2)} cursos aprobados en el 2.do ciclo."))
+    if cu1 >= 5:
+        favores.append((2, f"{int(cu1)} cursos aprobados en el 1.er ciclo."))
+    if g2 >= 13:
+        favores.append((2, f"Buen promedio en el 2.do ciclo ({g2:.2f})."))
+    if g1 >= 13:
+        favores.append((1, f"Buen promedio en el 1.er ciclo ({g1:.2f})."))
+    if adm >= 140:
+        favores.append((1, f"Nota de admisión sólida ({adm:.0f}/200)."))
+    if edad <= 20:
+        favores.append((1, f"Ingreso a edad típica ({int(edad)} años)."))
+
+    riesgos.sort(key=lambda x: -x[0])
+    favores.sort(key=lambda x: -x[0])
+
+    items = []
+    if prediccion == 1:
+        titulo = 'Factores críticos del diagnóstico'
+        etiquetas = ['Principal factor de alerta:', 'Factor secundario:', 'Otro factor:']
+        for i, (_, texto) in enumerate(riesgos[:3]):
+            items.append({
+                'nivel': 'alerta' if i == 0 else 'info',
+                'etiqueta': etiquetas[i],
+                'texto': texto,
+            })
+        if not items:
+            items.append({
+                'nivel': 'info',
+                'etiqueta': '',
+                'texto': 'El riesgo surge de la combinación de varios indicadores; '
+                         'ninguno supera por sí solo un umbral crítico.'
+            })
+    else:
+        titulo = 'Factores a favor del pronóstico'
+        for _, texto in favores[:3]:
+            items.append({'nivel': 'favorable', 'etiqueta': '', 'texto': texto})
+        if not items:
+            items.append({
+                'nivel': 'info',
+                'etiqueta': '',
+                'texto': 'Perfil dentro de valores promedio, sin factores destacados a favor.'
+            })
+        # Aspectos a vigilar aunque el pronóstico sea favorable
+        for _, texto in riesgos[:2]:
+            items.append({'nivel': 'info', 'etiqueta': 'A vigilar:', 'texto': texto})
+
+    return {'titulo': titulo, 'items': items}
+
+
+# ---------------------------------------------------------------------------
 # Inicialización de la base de datos
 # ---------------------------------------------------------------------------
 init_db()
@@ -165,6 +278,13 @@ def predecir():
         # No bloquear la respuesta si falla la auditoría
         print(f"[WARN] Error al insertar en BD: {e}")
 
+    # -- Explicación del diagnóstico (opcional: nunca bloquea la predicción) --
+    try:
+        factores = generar_factores(valores, prediccion)
+    except Exception as e:
+        print(f"[WARN] Error al generar factores: {e}")
+        factores = None
+
     # -- Respuesta exitosa --
     return jsonify({
         'status': 'ok',
@@ -172,6 +292,7 @@ def predecir():
         'etiqueta': etiqueta,
         'probabilidad_desercion': prob_desercion,
         'probabilidad_graduacion': prob_graduacion,
+        'factores': factores,
     })
 
 
