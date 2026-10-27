@@ -20,7 +20,7 @@ def _get_connection():
 
 
 def init_db():
-    """Crea la tabla historial_evaluaciones si no existe."""
+    """Crea la tabla historial_evaluaciones si no existe y verifica columnas."""
     conn = _get_connection()
     cursor = conn.cursor()
     cursor.execute('''
@@ -32,14 +32,15 @@ def init_db():
             nombre_alumno                   TEXT    DEFAULT '',
             codigo_alumno                   TEXT    DEFAULT '',
 
-            -- Variables de entrada (las 7 features)
+            -- Variables de entrada (features predictivas)
             cu_2sem_approved                REAL    NOT NULL,
             cu_1sem_approved                REAL    NOT NULL,
             cu_2sem_grade                   REAL    NOT NULL,
             cu_1sem_grade                   REAL    NOT NULL,
             admission_grade                 REAL    NOT NULL,
-            tuition_fees_up_to_date         REAL    NOT NULL,
             previous_qualification_grade    REAL    NOT NULL,
+            age_at_enrollment               REAL    DEFAULT 18,
+            tuition_fees_up_to_date         REAL    DEFAULT 1,
 
             -- Resultados de la predicción
             prediccion                      INTEGER NOT NULL,
@@ -49,6 +50,14 @@ def init_db():
         )
     ''')
     conn.commit()
+
+    # Migración: asegurar que la columna age_at_enrollment exista si la BD ya existía
+    cursor.execute("PRAGMA table_info(historial_evaluaciones)")
+    columnas_bd = [col[1] for col in cursor.fetchall()]
+    if 'age_at_enrollment' not in columnas_bd:
+        cursor.execute("ALTER TABLE historial_evaluaciones ADD COLUMN age_at_enrollment REAL DEFAULT 18")
+        conn.commit()
+
     conn.close()
 
 
@@ -70,11 +79,11 @@ def insertar_evaluacion(datos):
             nombre_alumno, codigo_alumno,
             cu_2sem_approved, cu_1sem_approved,
             cu_2sem_grade, cu_1sem_grade,
-            admission_grade, tuition_fees_up_to_date,
-            previous_qualification_grade,
+            admission_grade, previous_qualification_grade,
+            age_at_enrollment, tuition_fees_up_to_date,
             prediccion, etiqueta,
             probabilidad_desercion, probabilidad_graduacion
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', (
         datos.get('nombre_alumno', ''),
         datos.get('codigo_alumno', ''),
@@ -83,8 +92,9 @@ def insertar_evaluacion(datos):
         datos['cu_2sem_grade'],
         datos['cu_1sem_grade'],
         datos['admission_grade'],
-        datos['tuition_fees_up_to_date'],
         datos['previous_qualification_grade'],
+        datos.get('age_at_enrollment', 18),
+        datos.get('tuition_fees_up_to_date', 1),
         datos['prediccion'],
         datos['etiqueta'],
         datos['probabilidad_desercion'],

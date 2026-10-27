@@ -29,8 +29,8 @@ const CAMPOS = [
     'cu_1sem_grade',
     'cu_2sem_grade',
     'admission_grade',
-    'tuition_fees_up_to_date',
-    'previous_qualification_grade'
+    'previous_qualification_grade',
+    'age_at_enrollment'
 ];
 
 // ---- Envío del formulario ----

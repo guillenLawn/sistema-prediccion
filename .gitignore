@@ -2,3 +2,11 @@ venv/
 __pycache__/
 *.pyc
 database.db
+TA_TPlll/
+*.docx
+generar_informe_semana7.py
+ING, REQ/
+
+*.pdf
+*.png
+

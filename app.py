@@ -1,7 +1,7 @@
 """
 app.py — Servidor Flask para el Sistema de Predicción de Deserción Estudiantil.
 
-Carga los artefactos de Machine Learning (AdaBoost) al arrancar y expone
+Carga los artefactos de Machine Learning (Linear SVM Calibrado) al arrancar y expone
 un endpoint REST para realizar predicciones en tiempo real.
 """
 
@@ -31,9 +31,9 @@ try:
     modelo = joblib.load(os.path.join(MODELOS_DIR, 'modelo_campeon.joblib'))
     escalador = joblib.load(os.path.join(MODELOS_DIR, 'escalador.joblib'))
     columnas = joblib.load(os.path.join(MODELOS_DIR, 'columnas_requeridas.joblib'))
-    print(f"✅ Modelos cargados correctamente. Columnas esperadas: {columnas}")
+    print(f"[OK] Modelos cargados correctamente. Columnas esperadas: {columnas}")
 except FileNotFoundError as e:
-    print(f"⚠️  Error al cargar modelos: {e}")
+    print(f"[WARN] Error al cargar modelos: {e}")
     print("   Asegúrese de que los archivos .joblib estén en la carpeta 'modelos/'")
     modelo = None
     escalador = None
@@ -48,8 +48,8 @@ MAPA_CAMPOS = {
     'cu_2sem_grade': 'Curricular units 2nd sem (grade)',
     'cu_1sem_grade': 'Curricular units 1st sem (grade)',
     'admission_grade': 'Admission grade',
-    'tuition_fees_up_to_date': 'Tuition fees up to date',
     'previous_qualification_grade': 'Previous qualification (grade)',
+    'age_at_enrollment': 'Age at enrollment',
 }
 
 # Claves obligatorias en el payload JSON
@@ -163,7 +163,7 @@ def predecir():
         insertar_evaluacion(registro)
     except Exception as e:
         # No bloquear la respuesta si falla la auditoría
-        print(f"⚠️  Error al insertar en BD: {e}")
+        print(f"[WARN] Error al insertar en BD: {e}")
 
     # -- Respuesta exitosa --
     return jsonify({

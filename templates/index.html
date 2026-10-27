@@ -42,7 +42,7 @@
             </div>
             <div class="header__badge">
                 <span class="header__badge-dot"></span>
-                <span>Modelo AdaBoost Activo</span>
+                <span>Modelo Linear SVM Activo</span>
             </div>
         </div>
     </header>
@@ -102,21 +102,21 @@
                     <div class="form-grid form-grid--2col">
                         <div class="form-group">
                             <label for="cu_1sem_approved" class="form-label">
-                                Unidades Curriculares Aprobadas — 1er Semestre
+                                Cursos Aprobados — 1.er Ciclo
                             </label>
                             <input type="number" id="cu_1sem_approved" name="cu_1sem_approved"
                                    class="form-input" required
-                                   min="0" max="30" step="1" placeholder="0 – 30">
-                            <span class="form-hint">Cantidad de materias aprobadas</span>
+                                   min="0" max="8" step="1" placeholder="0 – 8">
+                            <span class="form-hint">Cantidad de cursos aprobados en el ciclo (0 a 8)</span>
                         </div>
                         <div class="form-group">
                             <label for="cu_2sem_approved" class="form-label">
-                                Unidades Curriculares Aprobadas — 2do Semestre
+                                Cursos Aprobados — 2.do Ciclo
                             </label>
                             <input type="number" id="cu_2sem_approved" name="cu_2sem_approved"
                                    class="form-input" required
-                                   min="0" max="30" step="1" placeholder="0 – 30">
-                            <span class="form-hint">Cantidad de materias aprobadas</span>
+                                   min="0" max="8" step="1" placeholder="0 – 8">
+                            <span class="form-hint">Cantidad de cursos aprobados en el ciclo (0 a 8)</span>
                         </div>
                         <div class="form-group">
                             <label for="cu_1sem_grade" class="form-label">
@@ -159,41 +159,33 @@
                         </div>
                         <div class="form-group">
                             <label for="previous_qualification_grade" class="form-label">
-                                Nota de Calificación Previa (Secundaria) - Escala vigesimal (0 a 20)
+                                Nota de Calificación Previa (Secundaria)
                             </label>
                             <input type="number" id="previous_qualification_grade" name="previous_qualification_grade"
                                    class="form-input" required
-                                   min="0" max="20" step="0.01" placeholder="Ej. 14.50">
+                                   min="0" max="20" step="0.01" placeholder="0.00 – 20.00">
                             <span class="form-hint">Nota de la educación secundaria en escala vigesimal</span>
                         </div>
                     </div>
                 </fieldset>
 
-                <!-- Situación Financiera -->
+                <!-- Datos Personales de Ingreso -->
                 <fieldset class="fieldset">
                     <legend class="fieldset__legend">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                         </svg>
-                        Situación Financiera
+                        Datos de Ingreso
                     </legend>
                     <div class="form-grid form-grid--1col">
                         <div class="form-group">
-                            <label for="tuition_fees_up_to_date" class="form-label">
-                                ¿Matrícula al día?
+                            <label for="age_at_enrollment" class="form-label">
+                                Edad al Matricularse
                             </label>
-                            <div class="select-wrapper">
-                                <select id="tuition_fees_up_to_date" name="tuition_fees_up_to_date"
-                                        class="form-input form-select" required>
-                                    <option value="" disabled selected>Seleccione una opción</option>
-                                    <option value="1">Sí — Pagos al día</option>
-                                    <option value="0">No — Pagos pendientes</option>
-                                </select>
-                                <svg class="select-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="6 9 12 15 18 9"/>
-                                </svg>
-                            </div>
-                            <span class="form-hint">Estado actual de los pagos de matrícula</span>
+                            <input type="number" id="age_at_enrollment" name="age_at_enrollment"
+                                   class="form-input" required
+                                   min="16" max="80" step="1" placeholder="Ej: 19">
+                            <span class="form-hint">Edad del estudiante al ingresar a la carrera</span>
                         </div>
                     </div>
                 </fieldset>
@@ -267,7 +259,7 @@
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <p>© 2026</p>
-        <p class="footer__tech">Modelo AdaBoost · Python · Flask · Machine Learning</p>
+        <p class="footer__tech">Modelo Linear SVM · Python · Flask · Machine Learning</p>
     </footer>
 
     <!-- ===== TOAST DE ERRORES ===== -->
